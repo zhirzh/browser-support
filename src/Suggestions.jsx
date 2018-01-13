@@ -4,6 +4,24 @@ import type { Feature } from './types';
 
 import React, { Component } from 'react';
 
+function UnknownFeature({ query }) {
+  return (
+    <div
+      style={{
+        textAlign: 'center',
+        opacity: 0.8,
+        marginTop: '4rem',
+      }}
+    >
+      <h3>Unknown Feature</h3>
+
+      <h3>
+        <code>{query}</code>
+      </h3>
+    </div>
+  );
+}
+
 type SuggestionProps = {
   addFeatureToChecklist: Function,
   feature: Feature,
@@ -56,8 +74,14 @@ class Suggestions extends Component<Props> {
       return null;
     }
 
+    const suggestions = this.fuzzy(this.props.query);
+
+    if (suggestions.length === 0) {
+      return <UnknownFeature query={this.props.query} />;
+    }
+
     return [
-      <div className="row table">
+      <div className="row table" key="suggestions">
         <div className="column column-80">
           <h2 style={{ textAlign: 'center' }}>Features</h2>
 
@@ -76,7 +100,7 @@ class Suggestions extends Component<Props> {
               </thead>
 
               <tbody>
-                {this.fuzzy(this.props.query).map(feature => (
+                {suggestions.map(feature => (
                   <Suggestion
                     addFeatureToChecklist={this.props.addFeatureToChecklist}
                     feature={feature}
@@ -89,7 +113,7 @@ class Suggestions extends Component<Props> {
         </div>
       </div>,
 
-      <hr />,
+      <hr key="hr" />,
     ];
   }
 }

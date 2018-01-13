@@ -20,9 +20,8 @@ function EmptyRequirements() {
         marginTop: '4rem',
       }}
     >
-      <h2>No Requirements!!</h2>
-      <h3>HUZZAH!!</h3>
-      <h4>Your code is fantastic</h4>
+      <h3>No Requirements!!</h3>
+      <h4>HUZZAH!!</h4>
     </div>
   );
 }
