@@ -1,0 +1,81 @@
+* {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  box-sizing: border-box;
+}
+
+/* global classes */
+
+.row {
+  padding-top: 20px;
+}
+
+.table {
+  justify-content: center;
+}
+
+.table th {
+  padding-left: 0;
+}
+
+.table td {
+  padding-left: 10px;
+}
+
+/* <Checklist /> */
+
+.checklist {
+  margin-right: calc(-1rem - 5px);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* <ChecklistItem /> */
+
+.checklist-item {
+  margin-right: 1rem;
+}
+
+.checklist-item:hover button {
+  position: relative;
+  opacity: 0.7;
+}
+
+.checklist-item:hover button::after {
+  position: absolute;
+  display: block;
+  top: 50%;
+  left: 0;
+  width: calc(100% - 4rem);
+
+  content: ' ';
+  border-bottom: 2px solid gray;
+  margin-left: 2rem;
+}
+
+/* <Suggestion /> */
+
+.suggestion {
+  cursor: pointer;
+}
+
+.suggestion:hover,
+.suggestion:focus {
+  background: #eee;
+}
+
+.suggestion:active {
+  background: #ddd;
+}
+
+/* <RequirementsTable /> */
+
+tr.none td:first-child {
+  color: orangered;
+}
+
+td.none {
+  font-style: italic;
+  opacity: 0.7;
+}
