@@ -1,5 +1,5 @@
 # Browser Support
 
-Check your project's browser requirements. When working on cutting-edge tech stack, it is important to figure out the oldest supported browsers. We can use [caniuse.com](https://www.caniuse.com/), though it doesn't check browser support for multiple features.
+When working on a cutting-edge tech stack, browser support fluctuates with the WebAPIs used. This is where `browser-support` comes in. It uses compatibility data from [caniuse.com](https://www.caniuse.com/) and calculates browser support taking into account multiple features.
 
-This is where `browser-support` comes in. Visit [browser-support](https://zhirzh.github.io/browser-support/build/) to calculate the bottom line for your code's browser support.
+Visit [browser-support](https://zhirzh.github.io/browser-support/build/) to calculate the bottom line for your code's browser support.
