@@ -71,11 +71,6 @@
 
 /* <RequirementsTable /> */
 
-tr.none td:first-child {
+tr.not-supported td:first-child {
   color: orangered;
-}
-
-td.none {
-  font-style: italic;
-  opacity: 0.7;
 }

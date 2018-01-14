@@ -4,8 +4,8 @@ import type { Feature } from './types';
 
 import React, { Component } from 'react';
 
+import BrowserSupport from './BrowserSupport';
 import Checklist from './Checklist';
-import Requirements from './Requirements';
 import Suggestions from './Suggestions';
 
 type State = {
@@ -96,7 +96,7 @@ class App extends Component<void, State> {
 
         <hr />
 
-        <Requirements
+        <BrowserSupport
           browsers={this.state.browsers}
           checklist={this.state.checklist}
         />
