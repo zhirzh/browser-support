@@ -57,7 +57,6 @@ class RequirementsTable extends Component<RequirementsTableProps> {
           <tr>
             <th>Browser</th>
             <th>Full Support</th>
-            <th>Partial Support</th>
           </tr>
         </thead>
 
@@ -65,9 +64,7 @@ class RequirementsTable extends Component<RequirementsTableProps> {
           {Object.keys(this.props.requirements).map(browser => {
             const browserData = this.props.requirements[browser];
 
-            const noSupport =
-              browserData.min === SUPPORT.NONE &&
-              browserData.partial === SUPPORT.NONE;
+            const noSupport = browserData.min === SUPPORT.NONE;
 
             return (
               <tr key={browser} className={noSupport ? 'none' : ''}>
@@ -75,12 +72,6 @@ class RequirementsTable extends Component<RequirementsTableProps> {
 
                 <td className={browserData.min === SUPPORT.NONE ? 'none' : ''}>
                   {this.parseVersion(browserData.min)}
-                </td>
-
-                <td
-                  className={browserData.partial === SUPPORT.NONE ? 'none' : ''}
-                >
-                  {this.parseVersion(browserData.partial)}
                 </td>
               </tr>
             );
@@ -173,7 +164,6 @@ class Requirements extends Component<Props> {
     Object.keys(this.props.browsers).forEach(browser => {
       requirements[browser] = {
         min: this.calculate(browser, x => x === 'y'),
-        partial: this.calculate(browser, x => x.startsWith('a')),
       };
     });
 
