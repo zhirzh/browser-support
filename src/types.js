@@ -2,6 +2,10 @@ type Requirements = {
   [string]: {
     [string]: [string],
   },
+
+  // browser: {
+  //   version: 'support level code'
+  // }
 };
 
 type Feature = {

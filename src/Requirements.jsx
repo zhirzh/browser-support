@@ -92,6 +92,7 @@ class RequirementsTable extends Component<RequirementsTableProps> {
 }
 
 type Props = {
+  browsers: Object,
   checklist: Array<Feature>,
 };
 
@@ -117,70 +118,63 @@ const browserCodes = {
 };
 
 class Requirements extends Component<Props> {
-  parseVersion(version: string | void) {
-    if (version === undefined) {
-      return SUPPORT.NONE;
-    }
+  calculate(browser: string, versionSelector: Function) {
+    /**
+     * type browserVersion =
+     *   | void
+     *   | "TP"
+     *   | "all"
+     *   | number
+     *
+     * type requirementVersion =
+     *   | "all"  : Array<browserVersion>.every(v => v === "all")
+     *   | "none" : Array<browserVersion>.some(v => v === undefined)
+     *   | "next" : Array<browserVersion>.some(v => v === "TP")
+     *   | number : Array<browserVersion>.max()
+     */
 
-    switch (version.toLowerCase()) {
-      case 'tp':
+    let requirementVersion = SUPPORT.ALL;
+
+    for (let i = 0; i < this.props.checklist.length; i++) {
+      const feature = this.props.checklist[i];
+
+      const browserData = feature.stats[browser];
+
+      const browserVersion = Object.keys(browserData).find(version =>
+        versionSelector(browserData[version])
+      );
+
+      if (browserVersion === undefined) {
+        return SUPPORT.NONE;
+      }
+
+      if (browserVersion.toLowerCase() === 'tp') {
         return SUPPORT.NEXT;
+      }
 
-      case 'all':
-        return SUPPORT.ALL;
-
-      default:
-        return parseFloat(version);
+      if (browserVersion.toLowerCase() !== 'all') {
+        if (requirementVersion === SUPPORT.ALL) {
+          requirementVersion = browserVersion;
+        } else {
+          requirementVersion = Math.max(
+            requirementVersion,
+            parseFloat(browserVersion)
+          );
+        }
+      }
     }
-  }
 
-  maxVersion(requirementVersion: number, browserVersion: number) {
-    switch (requirementVersion) {
-      case SUPPORT.INIT:
-        return browserVersion;
-
-      case SUPPORT.NONE:
-        return requirementVersion;
-
-      default:
-        return Math.max(browserVersion, requirementVersion);
-    }
+    return requirementVersion;
   }
 
   calculateRequirements() {
     const requirements = {};
 
-    this.props.checklist.forEach(feature => {
-      Object.keys(feature.stats).forEach(browser => {
-        const browserData = feature.stats[browser];
-
-        if (requirements[browser] === undefined) {
-          requirements[browser] = {
-            min: SUPPORT.INIT,
-            partial: SUPPORT.INIT,
-          };
-        }
-
-        // first browser version with support
-        const version = Object.keys(browserData).find(
-          v => browserData[v] === 'y'
-        );
-
-        requirements[browser].min = this.maxVersion(
-          requirements[browser].min,
-          this.parseVersion(version)
-        );
-
-        // first browser version with partial support
-        const partialVersion = Object.keys(browserData).find(v =>
-          browserData[v].includes('a')
-        );
-
-        requirements[browser].partial = this.maxVersion(
-          requirements[browser].partial,
-          this.parseVersion(partialVersion)
-        );
-      });
+    Object.keys(this.props.browsers).forEach(browser => {
+      requirements[browser] = {
+        min: this.calculate(browser, x => x === 'y'),
+        partial: this.calculate(browser, x => x.startsWith('a')),
+      };
     });
 
     return requirements;

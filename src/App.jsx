@@ -9,6 +9,7 @@ import Requirements from './Requirements';
 import Suggestions from './Suggestions';
 
 type State = {
+  browsers: Object,
   checklist: Array<Feature>,
   data: Array<Feature>,
   query: string,
@@ -16,6 +17,7 @@ type State = {
 
 class App extends Component<void, State> {
   state = {
+    browsers: {},
     checklist: [],
     data: [],
     query: '',
@@ -29,7 +31,12 @@ class App extends Component<void, State> {
 
     const data = Object.keys(caniuse.data).map(k => caniuse.data[k]);
 
-    this.setState({ data });
+    const browsers = caniuse.agents;
+
+    this.setState({
+      browsers,
+      data,
+    });
   }
 
   addFeatureToChecklist = (feature: Feature) => {
@@ -89,7 +96,10 @@ class App extends Component<void, State> {
 
         <hr />
 
-        <Requirements checklist={this.state.checklist} />
+        <Requirements
+          browsers={this.state.browsers}
+          checklist={this.state.checklist}
+        />
       </div>
     );
   }
