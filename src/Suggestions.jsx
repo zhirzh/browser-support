@@ -80,8 +80,8 @@ class Suggestions extends Component<Props> {
       return <UnknownFeature query={this.props.query} />;
     }
 
-    return [
-      <div className="row table" key="suggestions">
+    return (
+      <div className="row table">
         <div className="column column-80">
           <h2 style={{ textAlign: 'center' }}>Features</h2>
 
@@ -111,10 +111,8 @@ class Suggestions extends Component<Props> {
             </table>
           </div>
         </div>
-      </div>,
-
-      <hr key="hr" />,
-    ];
+      </div>
+    );
   }
 }
 

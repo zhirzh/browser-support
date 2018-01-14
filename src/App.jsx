@@ -27,6 +27,7 @@ class App extends Component<void, State> {
     const resp = await fetch(
       'https://raw.githubusercontent.com/Fyrd/caniuse/master/data.json'
     );
+
     const caniuse = await resp.json();
 
     const data = Object.keys(caniuse.data).map(k => caniuse.data[k]);
@@ -89,12 +90,16 @@ class App extends Component<void, State> {
           query={this.state.query}
         />
 
+        {this.state.query.length > 0 && <hr />}
+
         <Checklist
           checklist={this.state.checklist}
           removeFeatureFromChecklist={this.removeFeatureFromChecklist}
         />
 
         <hr />
+
+        <h2 style={{ textAlign: 'center' }}>Browser Support</h2>
 
         <BrowserSupport
           browsers={this.state.browsers}
