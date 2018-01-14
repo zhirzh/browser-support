@@ -9,7 +9,9 @@ import Checklist from './Checklist';
 import Suggestions from './Suggestions';
 
 type State = {
-  browsers: Object,
+  browsers: {
+    [string]: string,
+  },
   checklist: Array<Feature>,
   data: Array<Feature>,
   query: string,
@@ -30,9 +32,16 @@ class App extends Component<void, State> {
 
     const caniuse = await resp.json();
 
-    const data = Object.keys(caniuse.data).map(k => caniuse.data[k]);
+    const browsers = Object.keys(caniuse.agents).reduce(
+      (_browsers, browserCode) => {
+        _browsers[browserCode] = caniuse.agents[browserCode].browser;
 
-    const browsers = caniuse.agents;
+        return _browsers;
+      },
+      {}
+    );
+
+    const data = Object.keys(caniuse.data).map(k => caniuse.data[k]);
 
     this.setState({
       browsers,

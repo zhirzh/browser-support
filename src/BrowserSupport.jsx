@@ -10,23 +10,10 @@ const SUPPORT = {
   NEXT: Infinity,
 };
 
-function EmptySupport() {
-  return (
-    <div
-      style={{
-        textAlign: 'center',
-        opacity: 0.8,
-        marginTop: '4rem',
-      }}
-    >
-      <h3>No Support!!</h3>
-      <h4>HUZZAH!!</h4>
-    </div>
-  );
-}
-
 type BrowserSupportTableProps = {
-  browserNames: Object,
+  browserNames: {
+    [string]: string,
+  },
   browserSupport: Support,
 };
 
@@ -60,14 +47,17 @@ class BrowserSupportTable extends Component<BrowserSupportTableProps> {
         </thead>
 
         <tbody>
-          {Object.keys(this.props.browserSupport).map(browser => {
-            const browserData = this.props.browserSupport[browser];
+          {Object.keys(this.props.browserSupport).map(browserCode => {
+            const browserData = this.props.browserSupport[browserCode];
 
             const notSupported = browserData.full === SUPPORT.NONE;
 
             return (
-              <tr key={browser} className={notSupported ? 'not-supported' : ''}>
-                <td>{this.props.browserNames[browser].browser}</td>
+              <tr
+                key={browserCode}
+                className={notSupported ? 'not-supported' : ''}
+              >
+                <td>{this.props.browserNames[browserCode]}</td>
 
                 <td>{this.parseVersion(browserData.full)}</td>
               </tr>
@@ -80,12 +70,14 @@ class BrowserSupportTable extends Component<BrowserSupportTableProps> {
 }
 
 type Props = {
-  browsers: Object,
+  browsers: {
+    [string]: string,
+  },
   checklist: Array<Feature>,
 };
 
 class BrowserSupport extends Component<Props> {
-  calculate(browser: string, versionSelector: Function) {
+  calculate(browserCode: string, versionSelector: Function) {
     /**
      * type browserVersion =
      *   | void
@@ -105,7 +97,7 @@ class BrowserSupport extends Component<Props> {
     for (let i = 0; i < this.props.checklist.length; i++) {
       const feature = this.props.checklist[i];
 
-      const browserData = feature.stats[browser];
+      const browserData = feature.stats[browserCode];
 
       const browserVersion = Object.keys(browserData).find(version =>
         versionSelector(browserData[version])
@@ -134,9 +126,9 @@ class BrowserSupport extends Component<Props> {
   calculateBrowserSupport() {
     const browserSupport = {};
 
-    Object.keys(this.props.browsers).forEach(browser => {
-      browserSupport[browser] = {
-        full: this.calculate(browser, x => x === 'y'),
+    Object.keys(this.props.browsers).forEach(browserCode => {
+      browserSupport[browserCode] = {
+        full: this.calculate(browserCode, x => x === 'y'),
       };
     });
 
@@ -144,27 +136,28 @@ class BrowserSupport extends Component<Props> {
   }
 
   render() {
-    const browserSupport = this.calculateBrowserSupport();
-    const hasSupport = Object.keys(browserSupport).length > 0;
+    if (this.props.checklist.length === 0) {
+      return (
+        <h4
+          style={{
+            textAlign: 'center',
+            opacity: 0.8,
+          }}
+        >
+          Select Features to Calculate Browser Support
+        </h4>
+      );
+    }
 
-    const browserNames = {};
-    Object.keys(this.props.browsers).forEach(browser => {
-      browserNames[browser] = this.props.browsers[browser];
-    });
+    const browserSupport = this.calculateBrowserSupport();
 
     return (
       <div className="row table">
         <div className="column column-40">
-          <h2 style={{ textAlign: 'center' }}>Browser Support</h2>
-
-          {hasSupport ? (
-            <BrowserSupportTable
-              browserNames={browserNames}
-              browserSupport={browserSupport}
-            />
-          ) : (
-            <EmptySupport />
-          )}
+          <BrowserSupportTable
+            browserNames={this.props.browsers}
+            browserSupport={browserSupport}
+          />
         </div>
       </div>
     );
