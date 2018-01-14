@@ -8,6 +8,16 @@ import BrowserSupport from './BrowserSupport';
 import Checklist from './Checklist';
 import Suggestions from './Suggestions';
 
+function Loading() {
+  return (
+    <div>
+      <div className="loading" />
+      <h4 style={{ textAlign: 'center' }}>Loading Data</h4>
+      <div className="loading" />
+    </div>
+  );
+}
+
 type State = {
   browsers: {
     [string]: string,
@@ -82,10 +92,15 @@ class App extends Component<void, State> {
   };
 
   render() {
+    const notReady = this.state.data.length === 0;
+
     return (
       <div className="container">
+        {notReady && <Loading />}
+
         <div className="row">
           <input
+            disabled={notReady}
             onInput={this.updateQuery}
             placeholder="Add features"
             type="text"
