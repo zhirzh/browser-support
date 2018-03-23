@@ -1,3 +1,8 @@
+/**
+ * @flow
+ * @prettier
+ */
+
 type Requirements = {
   [string]: {
     [string]: [string],

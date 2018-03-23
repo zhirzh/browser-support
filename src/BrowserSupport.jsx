@@ -1,4 +1,7 @@
-// @flow
+/**
+ * @flow
+ * @prettier
+ */
 
 import type { Feature, Support } from './types';
 
