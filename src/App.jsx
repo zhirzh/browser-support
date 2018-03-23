@@ -39,27 +39,14 @@ class App extends Component<{}, State> {
   };
 
   async componentDidMount() {
-    const resp = await fetch(
-      'https://raw.githubusercontent.com/Fyrd/caniuse/master/data.json'
-    );
+    await this.fetchData();
+    this.loadChecklistFromURL();
+  }
 
-    const caniuse = await resp.json();
-
-    const browsers = Object.keys(caniuse.agents).reduce(
-      (_browsers, browserCode) => {
-        _browsers[browserCode] = caniuse.agents[browserCode].browser;
-
-        return _browsers;
-      },
-      {}
-    );
-
-    const data = Object.keys(caniuse.data).map(k => caniuse.data[k]);
-
-    this.setState({
-      browsers,
-      data,
-    });
+  componentDidUpdate(_: any, prevState: State) {
+    if (this.state.checklist !== prevState.checklist) {
+      this.syncChecklistToURL();
+    }
   }
 
   addFeatureToChecklist = (feature: Feature) => {
@@ -77,6 +64,53 @@ class App extends Component<{}, State> {
     });
   };
 
+  async fetchData() {
+    const resp = await fetch(
+      'https://raw.githubusercontent.com/Fyrd/caniuse/master/data.json'
+    );
+
+    const caniuse = await resp.json();
+
+    const browsers = Object.keys(caniuse.agents).reduce(
+      (_browsers, browserCode) => {
+        _browsers[browserCode] = caniuse.agents[browserCode].browser;
+
+        return _browsers;
+      },
+      {}
+    );
+
+    const data = Object.keys(caniuse.data).map(k => {
+      const data = caniuse.data[k];
+      data.code = k;
+
+      return data;
+    });
+
+    this.setState({
+      browsers,
+      data,
+    });
+  }
+
+  loadChecklistFromURL() {
+    const checklistCodes = new URLSearchParams(window.location.search).get(
+      'checklist'
+    );
+
+    if (checklistCodes === null) {
+      this.syncChecklistToURL();
+      return;
+    }
+
+    const checklist = checklistCodes
+      .split(',')
+      .map(code => this.state.data.find(feature => feature.code === code))
+      .filter(Boolean);
+
+    this.setState({ checklist });
+  }
+
   removeFeatureFromChecklist = (feature: Feature) => {
     const idx = this.state.checklist.findIndex(x => x === feature);
 
@@ -89,6 +123,14 @@ class App extends Component<{}, State> {
       ],
     });
   };
+
+  syncChecklistToURL() {
+    const checklistCodes = this.state.checklist
+      .map(feature => feature.code)
+      .join();
+
+    window.history.pushState(null, '', '?checklist=' + checklistCodes);
+  }
 
   updateQuery = (e: SyntheticInputEvent<HTMLInputElement>) => {
     this.setState({ ...this.state, query: e.currentTarget.value });

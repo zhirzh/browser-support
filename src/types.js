@@ -15,6 +15,7 @@ type Requirements = {
 
 type Feature = {
   title: string,
+  code: string,
   description: string,
   stats: Requirements,
 };
