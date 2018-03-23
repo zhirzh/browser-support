@@ -51,6 +51,9 @@ type Props = {
   query: string,
 };
 
+/**
+ * Provide matching feature suggestions to user's feature query
+ */
 class Suggestions extends Component<Props> {
   fuzzy(query: string) {
     const exactPattern = new RegExp(`^${query}$`, 'i');

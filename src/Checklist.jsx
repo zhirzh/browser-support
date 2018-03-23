@@ -12,6 +12,9 @@ type ChecklistItemProps = {
   removeFeatureFromChecklist: Function,
 };
 
+/**
+ * A button to remove a feature from user's feature checklist
+ */
 class ChecklistItem extends Component<ChecklistItemProps> {
   removeFeatureFromChecklist = () => {
     this.props.removeFeatureFromChecklist(this.props.feature);
@@ -37,6 +40,9 @@ type Props = {
   removeFeatureFromChecklist: Function,
 };
 
+/**
+ * Display user's selected features as pills (buttons)
+ */
 class Checklist extends Component<Props> {
   render() {
     return (

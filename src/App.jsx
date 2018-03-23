@@ -30,7 +30,7 @@ type State = {
   query: string,
 };
 
-class App extends Component<void, State> {
+class App extends Component<{}, State> {
   state = {
     browsers: {},
     checklist: [],
@@ -106,6 +106,7 @@ class App extends Component<void, State> {
             disabled={notReady}
             onInput={this.updateQuery}
             placeholder="Add features"
+            title={notReady ? 'Loading data' : ''}
             type="text"
             value={this.state.query}
           />

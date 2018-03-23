@@ -19,4 +19,10 @@ type Feature = {
   stats: Requirements,
 };
 
-export type { Feature, Requirements };
+type Support = {
+  [string]: {
+    full: number | string,
+  },
+};
+
+export type { Feature, Requirements, Support };

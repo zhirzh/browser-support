@@ -20,8 +20,11 @@ type BrowserSupportTableProps = {
   browserSupport: Support,
 };
 
+/**
+ * The support table
+ */
 class BrowserSupportTable extends Component<BrowserSupportTableProps> {
-  parseVersion(version: number) {
+  parseVersion(version: number | string) {
     switch (version) {
       case SUPPORT.NONE:
         return <i>None</i>;
@@ -79,6 +82,9 @@ type Props = {
   checklist: Array<Feature>,
 };
 
+/**
+ * Renders the support table
+ */
 class BrowserSupport extends Component<Props> {
   calculate(browserCode: string, versionSelector: Function) {
     /**
