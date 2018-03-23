@@ -93,6 +93,7 @@ class BrowserSupport extends Component<Props> {
      *   | "TP"
      *   | "all"
      *   | number
+     *   | number-number
      *
      * type supportVersion =
      *   | "all"  : Array<browserVersion>.every(v => v === "all")
@@ -114,6 +115,10 @@ class BrowserSupport extends Component<Props> {
 
       if (browserVersion === undefined) {
         return SUPPORT.NONE;
+      }
+
+      if (browserVersion.match(/\d-\d/)) {
+        return browserVersion.split('-')[1];
       }
 
       if (browserVersion.toLowerCase() === 'tp') {
